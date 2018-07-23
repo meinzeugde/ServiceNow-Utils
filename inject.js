@@ -118,7 +118,7 @@ function setAllMandatoryFieldsToFalse() {
  */
 function makeReadOnlyContentCopyable() {
     try {
-        if (g_glideEditorArray instanceof Array) {
+        if (typeof g_glideEditorArray != 'undefined' && g_glideEditorArray instanceof Array) {
             for (var i = 0; i < g_glideEditorArray.length; i++) {
                 if (g_glideEditorArray[i].editor.getOption('readOnly') == 'nocursor')
                     g_glideEditorArray[i].editor.setOption('readOnly', true);
