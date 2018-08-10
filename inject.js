@@ -251,6 +251,26 @@ function showSelectFieldValues() {
     });
 }
 
+function showFormSections() {
+    if (typeof jQuery == 'undefined') return; //not in studio
+
+    jQuery('form [data-section-id]').each(function (i, el) {
+        var jqEl = jQuery(el);
+        var sectionSysId = jqEl.attr('data-section-id');
+        
+        var container = '<div class="outputmsg_div service-now-util-section"><div class="outputmsg outputmsg_info notification notification-info"><span class="outputmsg_text">' +
+        '<a href="sys_ui_section.do?sys_id=' + sectionSysId + '" target="_blank">Go to Form Section "' + sectionSysId + '"</a>' +
+        ' | ' +
+        '<a href="sys_update_xml_list.do?sysparm_query=nameCONTAINS' + sectionSysId + '" target="_blank">Go to Customer Updates for Form Section</a>' +
+        '</span></div></div>';
+        
+        jqSecEl = jqEl.find('div#' + sectionSysId);
+        if(jqSecEl.find('.service-now-util-section').size() == 0) {
+            jqSecEl.css({border: '1px solid #ff0000'}).prepend(container);
+        }
+    });
+}
+
 function setShortCuts() {
 
     document.addEventListener("keydown", function (event) {
