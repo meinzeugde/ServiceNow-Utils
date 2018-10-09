@@ -327,11 +327,30 @@ function setShortCuts() {
                 var value = applicationFilterEl.val();
                 var listurl = '';
                 var query = [];
-                var table = value.substr(0, value.indexOf('.'));
-                var action = value.substr(value.indexOf('.') + 1);
                 var orderAttr = 'sys_updated_on';
+                var table, action;
 
-                if (action != '') {
+                if(value.indexOf('>') > -1 && value.indexOf('.') == -1) {
+                    query.push(value.substr(value.indexOf('>') + 1));
+                    table = value.substr(0, value.indexOf('>'));
+                    if(isSysId(query[0])) {
+                        listurl = '/' + table + '.do?sys_id=' + query[0];
+                    } else {
+                        listurl = '/' + table + '_list.do' + getSysParmAppendix(query, orderAttr);
+                    }
+                    
+                    //open window if action is applicable
+                    loadIframe(listurl);
+                } else if (value.indexOf('.') > -1) {
+                    table = value.substr(0, value.indexOf('.'));
+                    if(value.indexOf('>') > -1) {
+                        action = value.substr(value.indexOf('.') + 1, value.indexOf('>') - value.indexOf('.') - 1 );
+                        query.push(value.substr(value.indexOf('>') + 1));
+                        if(isSysId(query[0])) query[0] = 'sys_id='+query[0];
+                    } else {
+                        action = value.substr(value.indexOf('.') + 1);
+                    }                
+                
                     //Restrict records to today for certain tables
                     if (['sys_update_version', 'syslog'].indexOf(table) > -1) {
                         query.push('sys_created_onONToday@javascript:gs.daysAgoStart(0)@javascript:gs.daysAgoEnd(0)');
@@ -339,7 +358,16 @@ function setShortCuts() {
                     }
                     //set url for all actions
                     if (action.toLowerCase() == 'do') {
-                        listurl = '/' + table + '.do';
+                        if(query.length > 0) {
+                            sysparmArr = query[0].split('=');
+                            if(!sysparmArr[1]) {
+                                sysparmArr[1] = sysparmArr[0];
+                                sysparmArr[0] = 'number';
+                            }
+                            listurl = '/' + table + '.do?sysparm_refkey='+sysparmArr[0]+'&sys_id='+sysparmArr[1];
+                        } else {
+                            listurl = '/' + table + '.do';
+                        }
                     }
                     else if (action.toLowerCase() == 'li') {
                         listurl = '/' + table + '_list.do' + getSysParmAppendix(query, orderAttr);
@@ -364,9 +392,11 @@ function setShortCuts() {
                         loadIframe(listurl);
                     }
                 }
+
+                console.log('table: ' + table, 'action: ' + action, 'query: ' + query);
             } else if (globalSearchEl &&  document.activeElement.id == globalSearchId) {
                 var value = globalSearchEl.val();
-                if(value.match(/^[a-z0-9]{32,32}$/g) != null && value.length == 32) {
+                if(isSysId(value)) {
                     event.preventDefault();
                     searchSysIdTables(value);
                 }
@@ -418,6 +448,10 @@ function getSysParmAppendix(encodedQueryArr, orderAttr) {
         return '?sysparm_query=' + encodedQueryArr.join('^') + '&' + orderQuery;   
     }
     return '?' + orderQuery;
+}
+
+function isSysId(value) {
+    return (value.match(/^[a-z0-9]{32,32}$/g) != null && value.length == 32);
 }
 
 function bindPaste() {
