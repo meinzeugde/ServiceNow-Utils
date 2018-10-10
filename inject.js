@@ -149,38 +149,42 @@ function clickToList() {
                 var tpe = '';
                 var tbl = g_form.getTableName();
                 var elm = 'sys_id';
-                var val = g_form.getUniqueValue();
+                var sysId = g_form.getUniqueValue();
                 var operator = '=';
-                var val;
+                var sysId;
                 if (jQuery(event.target).hasClass('label-text')) {
                     elm = jQuery(event.target).closest('div.form-group').attr('id').split('.').slice(2).join('.');
                     tpe = jQuery(event.target).closest('div.label_spacing').attr('type');
-                    val = g_form.getValue(elm);
+                    sysId = g_form.getValue(elm);
                 }
 
                 if (tpe == 'glide_list' && elm != 'sys_id') {
                     operator = 'LIKE';
                 }
-                else if (val.length != 32 && val.length > 20) {
-                    val = val.substring(0, 32);
+                else if (sysId.length != 32 && sysId.length > 20) {
+                    sysId = sysId.substring(0, 32);
                     operator = 'LIKE';
                 }
-                else if (val.length == 0) {
-                    val = '';
+                else if (sysId.length == 0) {
+                    sysId = '';
                     operator = 'ISEMPTY';
                 }
 
                 var idx = qry.indexOf(elm + operator);
                 if (idx > -1)
-                    qry = qry.replace(elm + operator + val + '^', '');
+                    qry = qry.replace(elm + operator + sysId + '^', '');
                 else
-                    qry += elm + operator + val + '^';
+                    qry += elm + operator + sysId + '^';
 
                 var listurl = '/' + tbl + '_list.do?sysparm_query=' + qry;
                 g_form.clearMessages();
                 if (elm == 'sys_id' && qry.length <= 45) {
                     qry = '';
                     if (!$j(event.target).hasClass('btn') && !$j(event.target).is('a')) {
+                        var name = g_form.getValue('name');
+                        var number = g_form.getValue('number');
+                        if(name) listurl += 'ORname=' + name;
+                        if(number) listurl += 'ORnumber=' + number;                        
                         window.open(listurl, tbl);
                     }
                 }
