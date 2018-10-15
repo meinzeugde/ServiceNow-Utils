@@ -197,7 +197,7 @@ function clickToList() {
                 g_form.clearMessages();
                 if (elm == 'sys_id' && qry.length <= 45) {
                     qry = '';
-                    if (!$j(event.target).hasClass('btn') && !$j(event.target).is('a') && !$j(event.target.parentElement).is('a')) {
+                    if (!$j(event.target).hasClass('btn') && !$j(event.target).is('a') && !$j(event.target.parentElement).is('a') && !$j(event.target).is('option')) {
                         var name = g_form.getValue('name');
                         var number = g_form.getValue('number');
                         if(name) listurl += 'ORname=' + name;
