@@ -41,6 +41,23 @@ function extendReferenceIconsToOpenInTabs() {
     jQuery('[data-type=reference_popup]').attr('href','#');
 }
 
+function showCustomerUpdateRelatedRecordLinks() {
+    if (g_listHandlersLoaded) {
+        jQuery("table[id*='sys_update_xml'] tr[id*='sys_update_xml'] td[data-original-title]").filter(function() {
+            console.log(this.children[0])
+            var match = this.textContent.match(/[_a-z^0-9]*([a-z0-9]{32})/g);
+            var hasLink = jQuery(this.children[0]).hasClass('snowutils-related-record');
+            return match && !hasLink;
+        }).each(function (index, el) {
+            var elm = jQuery(this);
+            var title = elm.attr('title');
+            var table = title.substr(0, title.lastIndexOf('_'));
+            var sysId = title.substr(title.lastIndexOf('_') + 1);
+            elm.prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open"></a>');
+        });
+    }
+}
+
 function initializeAutocomplete(array) {
     if (typeof Bloodhound == 'undefined') return;
 
@@ -180,7 +197,7 @@ function clickToList() {
                 g_form.clearMessages();
                 if (elm == 'sys_id' && qry.length <= 45) {
                     qry = '';
-                    if (!$j(event.target).hasClass('btn') && !$j(event.target).is('a')) {
+                    if (!$j(event.target).hasClass('btn') && !$j(event.target).is('a') && !$j(event.target.parentElement).is('a')) {
                         var name = g_form.getValue('name');
                         var number = g_form.getValue('number');
                         if(name) listurl += 'ORname=' + name;
