@@ -44,7 +44,6 @@ function extendReferenceIconsToOpenInTabs() {
 function showCustomerUpdateRelatedRecordLinks() {
     if (g_listHandlersLoaded) {
         jQuery("table[id*='sys_update_xml'] tr[id*='sys_update_xml'] td[data-original-title]").filter(function() {
-            console.log(this.children[0])
             var match = this.textContent.match(/[_a-z^0-9]*([a-z0-9]{32})/g);
             var hasLink = jQuery(this.children[0]).hasClass('snowutils-related-record');
             return match && !hasLink;
@@ -56,6 +55,15 @@ function showCustomerUpdateRelatedRecordLinks() {
             elm.prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open"></a>');
         });
     }
+}
+
+function showTableSysIds() {
+    jQuery("table tr a[class*='list_popup']").each(function (index, el) {
+        var elm = jQuery(this);
+        var href = elm.attr('href');
+        var sysId = retrieveSysId(href)
+        elm.parent().html(sysId);
+    });
 }
 
 function initializeAutocomplete(array) {
@@ -469,6 +477,11 @@ function getSysParmAppendix(encodedQueryArr, orderAttr) {
         return '?sysparm_query=' + encodedQueryArr.join('^') + '&' + orderQuery;   
     }
     return '?' + orderQuery;
+}
+
+function retrieveSysId(value) {
+    var match = value.match(/[a-z0-9]{32,32}/);
+    return (match!=null) ? match[0] : '';
 }
 
 function isSysId(value) {

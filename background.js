@@ -69,6 +69,7 @@ chrome.contextMenus.create({ "id": "popinout", "parentId": "tools", "title": "Po
 chrome.contextMenus.create({ "id": "shownames", "parentId": "tools", "title": "Show technical names", "contexts": ["all"], "onclick": addTechnicalNames });
 chrome.contextMenus.create({ "id": "showselectfieldvalues", "parentId": "tools", "title": "Show Select-field values", "contexts": ["all"], "onclick": showSelectFieldValues });
 chrome.contextMenus.create({ "id": "showcustomerupdaterelatedrecordlinks", "parentId": "tools", "title": "Show Customer Update > Related Record Links", "contexts": ["all"], "onclick": showCustomerUpdateRelatedRecordLinks });
+chrome.contextMenus.create({ "id": "showtablesysids", "parentId": "tools", "title": "Show Table sys_id's", "contexts": ["all"], "onclick": showTableSysIds });
 chrome.contextMenus.create({ "id": "showuisections", "parentId": "tools", "title": "Show Form Sections", "contexts": ["all"], "onclick": showFormSections });
 chrome.contextMenus.create({ "id": "setmandatoryfieldstofalse", "parentId": "tools", "title": "Set all fields to non-mandatory", "contexts": ["all"], "onclick": setAllMandatoryFieldsToFalse });
 chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/cancel_my_transactions.do'); } });
@@ -211,6 +212,14 @@ function showCustomerUpdateRelatedRecordLinks() {
         { currentWindow: true, active: true },
         function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "showCustomerUpdateRelatedRecordLinks();", funtion() { } });
+        });
+}
+
+function showTableSysIds() {
+    chrome.tabs.query(
+        { currentWindow: true, active: true },
+        function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "showTableSysIds();", funtion() { } });
         });
 }
 
