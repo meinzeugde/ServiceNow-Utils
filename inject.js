@@ -66,6 +66,14 @@ function showTableSysIds() {
     });
 }
 
+function showTableFullLengthNames() {
+    jQuery("table tr td a:contains('...')").each(function (index, el) {
+        var elm = jQuery(this);
+        var title = elm.attr('title') || elm.parent().attr('title');
+        elm.html(title);
+    });
+}
+
 function initializeAutocomplete(array) {
     if (typeof Bloodhound == 'undefined') return;
 
