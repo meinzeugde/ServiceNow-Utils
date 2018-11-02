@@ -49,10 +49,12 @@ function showCustomerUpdateRelatedRecordLinks() {
             return match && !hasLink;
         }).each(function (index, el) {
             var elm = jQuery(this);
-            var title = elm.attr('title');
-            var table = title.substr(0, title.lastIndexOf('_'));
-            var sysId = title.substr(title.lastIndexOf('_') + 1);
-            elm.prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open"></a>');
+            var title = elm.attr('title') || elm.attr('data-original-title');
+            if(title.trim() != '') {
+                var table = title.substr(0, title.lastIndexOf('_'));
+                var sysId = title.substr(title.lastIndexOf('_') + 1);
+                elm.prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open"></a>');
+            }
         });
     }
 }
@@ -67,9 +69,14 @@ function showTableSysIds() {
 }
 
 function showTableFullLengthNames() {
+    jQuery("table tr td:contains('...')").each(function (index, el) {
+        var elm = jQuery(this);
+        var title = elm.attr('title') || elm.attr('data-original-title') || elm.parent().attr('title');
+        elm.html(title);
+    });
     jQuery("table tr td a:contains('...')").each(function (index, el) {
         var elm = jQuery(this);
-        var title = elm.attr('title') || elm.parent().attr('title');
+        var title = elm.attr('title') || elm.attr('data-original-title');
         elm.html(title);
     });
 }
