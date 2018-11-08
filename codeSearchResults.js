@@ -77,7 +77,8 @@ function generateHtmlForCodeSearchEntry(data, url, searchTerm, statisticsObj) {
 			jQuery.each(match.lineMatches, function(ix, fieldMatch) {
                 if(fieldMatch.escaped.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
 					statisticsObj.lines += 1;
-                    text += "Line: " + fieldMatch.line + " " + fieldMatch.escaped + "\n";
+					var fieldMatchHighlighted = fieldMatch.escaped.replace(new RegExp(searchTerm, 'gi'), function(m) { return '<strong>' + m + '</strong>'});
+                    text += "Line: " + fieldMatch.line + " " + fieldMatchHighlighted + "\n";
                 }
 			});
 			text += "</code></pre></li>";

@@ -26,3 +26,8 @@
     border: 1px solid #ccc;
     border-radius: 3px;
 }
+
+.card-body ul.record pre strong {
+    background-color: #fff1b2;
+    border: 1px solid #ffe366;
+}
