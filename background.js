@@ -426,11 +426,13 @@ function getBrowserVariables(tid) {
     tabid = tid;
     popup = chrome.extension.getViews({ type: "popup" })[0];
     chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_ck,g_user_date_time_format,NOW.user.roles,NOW.user.name,NOW.user_name" }, function (response) {
-        g_ck = (response && response.myVars) ? response.myVars.g_ck : '';
-        url = response.url;
-        instance = url.replace("https://", "").replace(".service-now.com", "");
-        nme = response.myVars.NOWusername || response.myVars.NOWuser_name;
-        popup.setBrowserVariables(response);
+        g_ck = (response && response.myVars) ? response.myVars.g_ck : false;
+        if(g_ck) {
+            url = response.url;
+            instance = url.replace("https://", "").replace(".service-now.com", "");
+            nme = response.myVars.NOWusername || response.myVars.NOWuser_name;
+            popup.setBrowserVariables(response);
+     }
     });
 }
 
