@@ -37,7 +37,7 @@ function generateHtmlForCodeSearchEntry(data, url, searchTerm, statisticsObj) {
 					data.tableLabel + ' [' + data.recordType + '] (' + data.hits.length + ')' +
 				'</button>' +
 			'</h5></div>' + 
-			'<div id="collapse_' + data.recordType + '" class="collapse show" aria-labelledby="' + data.recordType + '" data-parent="#searchCodeAccordion"><div class="card-body">' +
+			'<div id="collapse_' + data.recordType + '" class="collapse show" aria-labelledby="' + data.recordType + '" idata-parent="#searchCodeAccordion"><div class="card-body">' +
 			'';
 
 	var footer = '' + 
@@ -59,7 +59,7 @@ function generateHtmlForCodeSearchEntry(data, url, searchTerm, statisticsObj) {
 			'</button>' +
 			' [<a href="' + url + '/' + data.recordType + '.do?sys_id=' + hit.sysId + '" target="_blank">Open</a>]' +
 			'</h5></div>' +
-			'<div id="collapse_' + hit.sysId + '" class="collapse show" aria-labelledby="' + hit.sysId + '" data-parent="#searchCodeTableAccordion_' + data.recordType + '"><div class="card-body">' +
+			'<div id="collapse_' + hit.sysId + '" class="collapse show" aria-labelledby="' + hit.sysId + '" idata-parent="#searchCodeTableAccordion_' + data.recordType + '"><div class="card-body">' +
 			'';
 
 		var recordFooter = '' +
