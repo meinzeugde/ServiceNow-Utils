@@ -11,10 +11,11 @@ function initialize(url, result, searchTerm) {
 		lines: 0
 	};
 
-	var resultHtml = '';
+	var resultHtml = '<div class="accordion" id="searchCodeAccordion">';
 	for (var i=0; i<result.length; i++) {
 		resultHtml += generateHtmlForCodeSearchEntry(result[i], url, searchTerm, statisticsObj);
 	}
+	resultHtml += '</div>';
 	
 	var html = '<h1>Code Search results for "' + searchTerm + '"</h1>';
 	html += '<h4>' + statisticsObj.tables + ' Table(s) / ' + statisticsObj.hits + ' Record(s) / ' + statisticsObj.lines + ' Line(s) of Code - Time: ' + (new Date()).toUTCString() + '</h4>';
@@ -28,34 +29,66 @@ function generateHtmlForCodeSearchEntry(data, url, searchTerm, statisticsObj) {
 	if(!data || !data.hits || data.hits.length == 0)
 		return '';
 
-	var header = '<h3>' + data.tableLabel + ' [<a href="' + url + '/' + data.recordType + '_list.do" target="_blank">' + data.recordType + '</a>]</h3><br /><br />';
-	var result_body = "<div><p> Found <strong>" + data.hits.length + "</strong> records matching query.</p></div>";
-	result_body += "<div>";
-	
+	var header = '' + 
+		'<div class="card">' +
+			'<div class="card-header" id="head_' + data.recordType + '">' +
+			'' +
+				'<h5 class="mb-0"><button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_' + data.recordType + '" aria-expanded="true" aria-controls="collapse_' + data.recordType + '">' +
+					data.tableLabel + ' [' + data.recordType + '] (' + data.hits.length + ')' +
+				'</button>' +
+			'</h5></div>' + 
+			'<div id="collapse_' + data.recordType + '" class="collapse show" aria-labelledby="' + data.recordType + '" data-parent="#searchCodeAccordion"><div class="card-body">' +
+			'';
+
+	var footer = '' + 
+		'</div> <!--card-body-->' +
+		'</div> <!--collapse-->' +
+		'</div> <!--card-->';
+
+		
 	statisticsObj.tables += 1;
+	var tableAccordion = '<div class="accordion" id="searchCodeTableAccordion_' + data.recordType + '">';
+	
 	jQuery.each(data.hits, function(idx, hit) {
-		var result_desc = '<p>Record <a href="' + url + '/' + data.recordType + '.do?sys_id=' + hit.sysId + '" target="_blank">' + hit.name + "</a> has <strong>" + hit.matches.length + "</strong> matching fields.</p>";
-		var text = "<ul>";
+		var recordHeader = '' +
+			'<div class="card">' +
+			'<div class="card-header" id="head_' + hit.sysId + '">' +
+			'' +
+			'<h5 class="mb-0"><button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_' + hit.sysId + '" aria-expanded="true" aria-controls="collapse_' + hit.sysId + '">' +
+			hit.name + ' (' + hit.matches.length + ')' +
+			'</button>' +
+			' [<a href="' + url + '/' + data.recordType + '.do?sys_id=' + hit.sysId + '" target="_blank">Open</a>]' +
+			'</h5></div>' +
+			'<div id="collapse_' + hit.sysId + '" class="collapse show" aria-labelledby="' + hit.sysId + '" data-parent="#searchCodeTableAccordion_' + data.recordType + '"><div class="card-body">' +
+			'';
+
+		var recordFooter = '' +
+			'</div> <!--card-body-->' +
+			'</div> <!--collapse-->' +
+			'</div> <!--card-->';
+
+
+		var text = '<ul class="record">';
 		statisticsObj.hits += 1;
         	
 		jQuery.each(hit.matches, function(indx, match) {
-			text += "<li><p>" + match.fieldLabel + "</p>";
-			text += "<pre>";
+			text += "<li><span>" + match.fieldLabel + "</span>";
+			text += "<pre><code>";
 			jQuery.each(match.lineMatches, function(ix, fieldMatch) {
                 if(fieldMatch.escaped.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
 					statisticsObj.lines += 1;
                     text += "Line: " + fieldMatch.line + " " + fieldMatch.escaped + "\n";
                 }
 			});
-			text += "</pre></li>";
+			text += "</code></pre></li>";
 		});
 		text += "</ul>";
 		
-		result_body += result_desc + text;
+		tableAccordion += recordHeader + text + recordFooter;
 	});
 	
-	result_body += "</div>";
+	tableAccordion += "</div>";
     
-    return header + result_body;
+    return header + tableAccordion + footer;
 
 }
