@@ -214,6 +214,12 @@ function setBrowserVariables(obj) {
     $('#btnGetUser').click(function () {
         getUserDetails(false);
     });
+    $('#btnCodeSearch').click(function () {
+        codeSearch();
+    });
+    $('#tbcs').keypress(function (event) {
+        if (event.keyCode == 13) { codeSearch(); }
+    });
     //Attach eventlistners
     $('#btncreatefiles').click(function () {
         sendToSnuFileSync();
@@ -471,6 +477,13 @@ function setUserDetails(html) {
         $('#tbxname').val('');
 
     $('#waitinguser').hide();
+}
+
+function codeSearch(value) {
+    if (!value) value = $('#tbcs').val();
+    $('#tbcs').val(value);
+    $('#waitingcodesearch').show();
+    bgPage.executeCodeSearch(value);
 }
 
 //set or refresh datatable with ServiceNow updatesets

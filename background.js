@@ -562,6 +562,20 @@ function getUserDetails(userName) {
     });
 }
 
+function executeCodeSearch(searchTerm) {
+    var endpoint = url + '/api/sn_codesearch/code_search/search?term=' + searchTerm;
+    loadXMLDoc(g_ck, endpoint, null, function (response) {
+        var result = response.result || [];
+
+        chrome.tabs.create({'url': chrome.extension.getURL("codeSearchResults.html") });
+        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+            chrome.runtime.onMessage.removeListener(arguments.callee);
+            if(request.src === 'codeSearchLoaded') {
+                sendResponse({action: 'initialize', url: url, result: result, searchTerm: searchTerm});
+            }
+        });
+    });
+}
 
 //Query ServiceNow for tables, pass JSON back to popup
 function getTables() {

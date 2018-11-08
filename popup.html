@@ -64,6 +64,13 @@
                     </a>
                 </li>
                 <li class='nav-item'>
+                    <a class="nav-link" data-target="#tabcodesearch" data-toggle="tab">Code Search
+                        <span id="waitingcodesearch" class="waiting">
+                            <i class='fa fa-spinner fa-spin' aria-hidden='true'></i>
+                        </span>
+                    </a>
+                </li>
+                <li class='nav-item'>
                     <a class="nav-link" data-target="#tabgr" data-toggle="tab">GlideRecord</a>
                 </li>
                 <li class='nav-item'>
@@ -190,6 +197,15 @@
                         </span>
                     </div>
                     <div id="rspns"></div>
+                </div>
+
+                <div class="tab-pane" id="tabcodesearch">
+                    <div class="input-group">
+                        <input type="search" id="tbcs" name="tbcs" class="form-control form-control-sm" placeholder="Search globally...">
+                        <span class="input-group-append">
+                            <button id='btnCodeSearch' class="btn btn-outline-secondary btn-sm" type="button">Go!</button>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="tab-pane" id="tabgr">
