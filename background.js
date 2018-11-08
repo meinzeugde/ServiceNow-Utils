@@ -563,7 +563,7 @@ function getUserDetails(userName) {
 }
 
 function executeCodeSearch(searchTerm) {
-    var endpoint = url + '/api/sn_codesearch/code_search/search?term=' + searchTerm;
+    var endpoint = url + '/api/sn_codesearch/code_search/search?term=' + searchTerm + '&search_all_scopes=true';
     loadXMLDoc(g_ck, endpoint, null, function (response) {
         var result = response.result || [];
 
