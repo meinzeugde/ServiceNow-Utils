@@ -563,18 +563,7 @@ function getUserDetails(userName) {
 }
 
 function executeCodeSearch(searchTerm) {
-    var endpoint = url + '/api/sn_codesearch/code_search/search?term=' + searchTerm + '&search_all_scopes=true';
-    loadXMLDoc(g_ck, endpoint, null, function (response) {
-        var result = response.result || [];
-
-        chrome.tabs.create({'url': chrome.extension.getURL("codeSearchResults.html") });
-        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-            chrome.runtime.onMessage.removeListener(arguments.callee);
-            if(request.src === 'codeSearchLoaded') {
-                sendResponse({action: 'initialize', url: url, result: result, searchTerm: searchTerm});
-            }
-        });
-    });
+    chrome.tabs.create({'url': chrome.extension.getURL("codeSearchResults.html") + '?url=' + url + '&table=&searchTerm=' + searchTerm + '&gck=' + g_ck});
 }
 
 //Query ServiceNow for tables, pass JSON back to popup

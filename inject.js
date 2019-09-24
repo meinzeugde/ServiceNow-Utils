@@ -29,6 +29,7 @@ if (typeof jQuery != "undefined") {
         initializeAutocomplete();
         extendReferenceIconsToOpenInTabs();
         makeReadOnlyContentCopyable();
+        showCustomerUpdateRelatedRecordLinks();
     
         //Initialize Alert
         var alertContainer = '<div class="notification-container service-now-util-alert" role="alert" style="top: 20px;"><div class="notification outputmsg outputmsg_has_text"><span class="outputmsg_text role="alert"></span></div></div>';
@@ -42,18 +43,20 @@ function extendReferenceIconsToOpenInTabs() {
 }
 
 function showCustomerUpdateRelatedRecordLinks() {
-    if (g_listHandlersLoaded) {
-        jQuery("table[id*='sys_update_xml'] tr[id*='sys_update_xml'] td[data-original-title]").filter(function() {
-            var match = this.textContent.match(/[_a-z^0-9]*([a-z0-9]{32})/g);
-            var hasLink = jQuery(this.children[0]).hasClass('snowutils-related-record');
-            return match && !hasLink;
+    if (typeof g_listHandlersLoaded != 'undefined') {
+        // jQuery("table[id*='sys_update_xml'] tr[id*='sys_update_xml'] td[data-original-title]").filter(function() {
+        jQuery("table[id*='sys_update_xml'] tr[id*='sys_update_xml'] td a[data-popover-title]").filter(function(id,el) {
+            var elm = jQuery(el);
+            var match = elm.attr('data-popover-title').match(/[_a-z^0-9]*([a-z0-9]{32})/g);
+            var hasLink = elm.parent('td').find('a.snowutils-related-record').size() > 0;
+            return match  && !hasLink;
         }).each(function (index, el) {
             var elm = jQuery(this);
-            var title = elm.attr('title') || elm.attr('data-original-title');
+            var title = elm.attr('data-popover-title') || '';
             if(title.trim() != '') {
                 var table = title.substr(0, title.lastIndexOf('_'));
                 var sysId = title.substr(title.lastIndexOf('_') + 1);
-                elm.prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open"></a>');
+                elm.parent('td').prepend('<a class="snowutils-related-record" style="padding:5px;" href="' + table + '.do?sys_id=' + sysId + '" title="Show related record"><i class="glyphicon glyphicon-eye-open table-btn-lg"></a>');
             }
         });
     }
